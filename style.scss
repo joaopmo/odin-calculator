@@ -1,0 +1,163 @@
+/*RESET*/
+
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  touch-action: manipulation;
+}
+
+html,
+body{
+  width: 100%;
+  height: 100%;
+  font-size: 62.5%;
+}
+
+/*STYLE*/
+:root {
+  --delete: rgba(255, 0, 0, 1);
+  --delete-alpha: rgba(255, 0, 0, .2);
+  --number: rgba(0, 0, 255, 1);
+  --number-alpha: rgba(0, 0, 255, .2);
+  --operator: rgba(255, 0, 255, 1);
+  --operator-alpha: rgba(255, 0, 255, .2);
+  --equals: rgba(0, 255, 0, 1);
+  --equals-alpha: rgba(0, 255, 0, .2);
+}
+
+#content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.calculator {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 3fr;
+  align-items: center;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: #262626;
+  border-right: 5px outset #262626;
+  border-bottom: 5px outset #262626;
+  border-radius: 5px;
+
+  font-family: 'Roboto', sans-serif;
+
+}
+
+@mixin viewport($height, $width) {
+  height: min(calc(var(--vh, 1vh) * #{$height}), calc(var(--vw, 1vw) * #{$height}));
+  width: min(calc(var(--vh, 1vh) * #{$width}), calc(var(--vw, 1vw) * #{$width}));
+}
+
+.display {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  background-color: #3B5998;
+  @include viewport(20, 64);
+
+  box-shadow: inset -2px -2px 5px 0 rgba(0, 0, 0, 0.5);
+}
+
+.sup,
+.inf{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+
+  font-size: 5vmin;
+  text-align: right;
+  padding: 0 10px;
+}
+
+.sup {
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+}
+
+#buttons {
+  @include viewport(80, 64);
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-gap: 15px;
+  padding: 3px;
+
+  input {
+
+    border-radius: 50%;
+    outline: none;
+    background: none;
+    border: none;
+  }
+
+  @mixin buttons($btn-class) {
+    .#{$btn-class} {
+      box-shadow: 1px 1px 3px 2px var(--#{$btn-class});
+      text-shadow: 1px 1px var(--#{$btn-class});
+      background: var(--#{$btn-class}-alpha);
+    }
+  }
+
+  @include buttons(delete);
+  @include buttons(number);
+  @include buttons(operator);
+  @include buttons(equals);
+
+}
+
+@media screen and (orientation: landscape) {
+  .calculator {
+    grid-gap: 16px;
+    padding: 16px;
+  }
+
+  $keys: (seven eight nine mod power) (four five six divide multiply) (one two three subtract add) (zero dot clear del equals);
+
+  .display {
+    @include viewport(20, 80);
+  }
+
+  #buttons {
+    @include viewport(64, 80);
+
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-areas:
+      "#{nth($keys, 1)}"
+      "#{nth($keys, 2)}"
+      "#{nth($keys, 3)}"
+      "#{nth($keys, 4)}";
+  }
+
+  @each $i in $keys {
+    @each $j in $i {
+      ##{$j}-key {grid-area: #{$j};}
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

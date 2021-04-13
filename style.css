@@ -1,0 +1,215 @@
+/*RESET*/
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  touch-action: manipulation;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-size: 62.5%;
+}
+
+/*STYLE*/
+:root {
+  --delete: rgba(255, 0, 0, 1);
+  --delete-alpha: rgba(255, 0, 0, .2);
+  --number: rgba(0, 0, 255, 1);
+  --number-alpha: rgba(0, 0, 255, .2);
+  --operator: rgba(255, 0, 255, 1);
+  --operator-alpha: rgba(255, 0, 255, .2);
+  --equals: rgba(0, 255, 0, 1);
+  --equals-alpha: rgba(0, 255, 0, .2);
+}
+
+#content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.calculator {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 3fr;
+  align-items: center;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: #262626;
+  border-right: 5px outset #262626;
+  border-bottom: 5px outset #262626;
+  border-radius: 5px;
+  font-family: "Roboto", sans-serif;
+}
+
+.display {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  background-color: #3B5998;
+  height: min(calc(var(--vh, 1vh) * 20), calc(var(--vw, 1vw) * 20));
+  width: min(calc(var(--vh, 1vh) * 64), calc(var(--vw, 1vw) * 64));
+  box-shadow: inset -2px -2px 5px 0 rgba(0, 0, 0, 0.5);
+}
+
+.sup,
+.inf {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  font-size: 5vmin;
+  text-align: right;
+  padding: 0 10px;
+}
+
+.sup {
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+}
+
+#buttons {
+  height: min(calc(var(--vh, 1vh) * 80), calc(var(--vw, 1vw) * 80));
+  width: min(calc(var(--vh, 1vh) * 64), calc(var(--vw, 1vw) * 64));
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-gap: 15px;
+  padding: 3px;
+}
+#buttons input {
+  border-radius: 50%;
+  outline: none;
+  background: none;
+  border: none;
+}
+#buttons .delete {
+  box-shadow: 1px 1px 3px 2px var(--delete);
+  text-shadow: 1px 1px var(--delete);
+  background: var(--delete-alpha);
+}
+#buttons .number {
+  box-shadow: 1px 1px 3px 2px var(--number);
+  text-shadow: 1px 1px var(--number);
+  background: var(--number-alpha);
+}
+#buttons .operator {
+  box-shadow: 1px 1px 3px 2px var(--operator);
+  text-shadow: 1px 1px var(--operator);
+  background: var(--operator-alpha);
+}
+#buttons .equals {
+  box-shadow: 1px 1px 3px 2px var(--equals);
+  text-shadow: 1px 1px var(--equals);
+  background: var(--equals-alpha);
+}
+
+@media screen and (orientation: landscape) {
+  .calculator {
+    grid-gap: 16px;
+    padding: 16px;
+  }
+
+  .display {
+    height: min(calc(var(--vh, 1vh) * 20), calc(var(--vw, 1vw) * 20));
+    width: min(calc(var(--vh, 1vh) * 80), calc(var(--vw, 1vw) * 80));
+  }
+
+  #buttons {
+    height: min(calc(var(--vh, 1vh) * 64), calc(var(--vw, 1vw) * 64));
+    width: min(calc(var(--vh, 1vh) * 80), calc(var(--vw, 1vw) * 80));
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-areas: "seven eight nine mod power" "four five six divide multiply" "one two three subtract add" "zero dot clear del equals";
+  }
+
+  #seven-key {
+    grid-area: seven;
+  }
+
+  #eight-key {
+    grid-area: eight;
+  }
+
+  #nine-key {
+    grid-area: nine;
+  }
+
+  #mod-key {
+    grid-area: mod;
+  }
+
+  #power-key {
+    grid-area: power;
+  }
+
+  #four-key {
+    grid-area: four;
+  }
+
+  #five-key {
+    grid-area: five;
+  }
+
+  #six-key {
+    grid-area: six;
+  }
+
+  #divide-key {
+    grid-area: divide;
+  }
+
+  #multiply-key {
+    grid-area: multiply;
+  }
+
+  #one-key {
+    grid-area: one;
+  }
+
+  #two-key {
+    grid-area: two;
+  }
+
+  #three-key {
+    grid-area: three;
+  }
+
+  #subtract-key {
+    grid-area: subtract;
+  }
+
+  #add-key {
+    grid-area: add;
+  }
+
+  #zero-key {
+    grid-area: zero;
+  }
+
+  #dot-key {
+    grid-area: dot;
+  }
+
+  #clear-key {
+    grid-area: clear;
+  }
+
+  #del-key {
+    grid-area: del;
+  }
+
+  #equals-key {
+    grid-area: equals;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */
