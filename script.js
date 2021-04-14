@@ -65,6 +65,7 @@ function InputEventStyle(event, target) {
 
 function ButtonsHover() {
     let form = document.getElementById('buttons');
+    DisplayUpdate();
 
     form.addEventListener('pointerover', function (e) {
         let target = document.elementFromPoint(e.clientX, e.clientY);
@@ -187,11 +188,19 @@ function DisplayUpdate() {
     let inf = document.querySelector('.inf');
 
     let supText = operation.first;
+    let infText = '';
+
     supText += (operation.op !== '') ? ` ${operation.op}` : '';
     supText += (operation.second !== '') ? ` ${operation.second}` : '';
-    sup.innerText = supText;
 
-    inf.innerText = operation.result;
+    if (operation.result !== '') {
+        infText = operation.result + '│';
+    } else {
+        supText += '│';
+    }
+
+    sup.innerText = supText;
+    inf.innerText = infText;
 }
 
 

@@ -70,6 +70,7 @@ body {
   font-size: 5vmin;
   text-align: right;
   padding: 0 10px;
+  overflow: hidden;
 }
 
 .sup {
