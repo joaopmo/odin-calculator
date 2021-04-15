@@ -1,3 +1,5 @@
+"use strict";
+
 function Viewport() {
     let setViewport = function () {
         let vh = window.innerHeight * 0.01;
@@ -11,31 +13,23 @@ function Viewport() {
 }
 
 function FontSize() {
+    let form = document.getElementById('buttons').children;
     let setFontSize = function () {
-        let form = Array.from(document.getElementById('buttons'));
         let viewport = Math.min((window.innerHeight * 0.01), (window.innerWidth * 0.01));
 
-        form.forEach(function (item) {
-            let scale = 0;
-            switch (item.defaultValue.length) {
-                case 1:
-                    scale = 1;
-                    break;
-                case 2:
-                    scale = 1.3;
-                    break;
-                case 3:
-                    scale = 1.6;
-            }
+        console.log(form);
+        for (const item of form) {
+            console.log(item);
+            let scale = 1 + (item.defaultValue.length - 1) * 0.3;
             item.style.fontSize = `${(9 * viewport) / scale}px`;
-        });
+        }
     };
 
     setFontSize();
     window.addEventListener('resize', setFontSize);
 }
 
-function InputEventStyle(event, target) {
+function EventButtonStyle(event, target) {
     switch (event.type) {
         case 'pointerover':
             if (event.pointerType === 'mouse')
@@ -63,17 +57,18 @@ function InputEventStyle(event, target) {
     }
 }
 
-function ButtonsHover() {
+function ButtonEvents() {
     let form = document.getElementById('buttons');
     DisplayUpdate();
-    TextCursor();
+    BlinkCursor();
 
     form.addEventListener('pointerover', function (e) {
         let target = document.elementFromPoint(e.clientX, e.clientY);
         if ((target !== form) && (e.isPrimary)) {
-            InputEventStyle(e, target);
+            EventButtonStyle(e, target);
+
             target.addEventListener('pointerout', function (event) {
-                InputEventStyle(event, this);
+                EventButtonStyle(event, this);
             });
         }
     });
@@ -82,13 +77,13 @@ function ButtonsHover() {
         let target = document.elementFromPoint(e.clientX, e.clientY);
         if ((target !== form) && (e.isPrimary)) {
             operation.up = false;
-            InputEventStyle(e, target);
-            target.addEventListener('pointerup', function (event) {
-                InputEventStyle(event, this);
-            });
-
+            EventButtonStyle(e, target);
             Operate(target);
             DisplayUpdate();
+
+            target.addEventListener('pointerup', function (event) {
+                EventButtonStyle(event, this);
+            });
         }
     });
 }
@@ -201,38 +196,30 @@ function Operate(key) {
 }
 
 
-function TextCursor() {
+function BlinkCursor() {
     let sup = document.querySelector('.sup');
     let inf = document.querySelector('.inf');
 
+    inf.querySelector('.cursor').classList.add('hidden');
     sup.querySelector('.cursor').innerText = '│';
+    inf.querySelector('.cursor').innerText = '│';
+
 
     let cursor = true;
     setInterval(() => {
         if(cursor && operation.up) {
             sup.querySelector('.cursor').classList.add('hidden');
             inf.querySelector('.cursor').classList.add('hidden');
-            inf.querySelector('.cursor').innerText = '│';
             cursor = false;
         }else {
             if (operation.result !== ''){
-                sup.querySelector('.cursor').classList.add('hidden');
                 inf.querySelector('.cursor').classList.remove('hidden');
             } else {
                 sup.querySelector('.cursor').classList.remove('hidden');
-                inf.querySelector('.cursor').classList.add('hidden');
             }
             cursor = true;
             operation.up = true
         }
-
-
-        if (sup.querySelector('.second').innerHTML !== '') {
-            sup.querySelector('.cursor').style.gridArea = '2/3/3/4';
-        } else if (sup.querySelector('.op').innerHTML === '') {
-            sup.querySelector('.cursor').style.gridArea = '1/3/2/4';
-        }
-
     }, 500);
 }
 
@@ -241,10 +228,32 @@ function DisplayUpdate() {
     let sup = document.querySelector('.sup');
     let inf = document.querySelector('.inf');
 
+    //Update display text
     sup.querySelector('.op').innerText = operation.op;
     sup.querySelector('.first').innerHTML = operation.first;
     sup.querySelector('.second').innerHTML = operation.second;
     inf.querySelector('.first').innerText = operation.result;
+
+    //Move cursor
+    if (operation.result !== ''){
+        sup.querySelector('.cursor').classList.add('hidden');
+        inf.querySelector('.cursor').classList.remove('hidden');
+        inf.querySelector('.cursor').style.color = 'rgb(109, 214, 86, 1)';
+    } else if (operation.second !== '') {
+        sup.querySelector('.cursor').classList.remove('hidden');
+        sup.querySelector('.cursor').style.gridArea = '2/3/3/4';
+        sup.querySelector('.cursor').style.color = 'rgba(86, 156, 214, 1)';
+        inf.querySelector('.cursor').classList.add('hidden');
+    } else if (operation.op !== '') {
+        sup.querySelector('.cursor').classList.remove('hidden');
+        sup.querySelector('.cursor').style.gridArea = '2/3/3/4';
+        sup.querySelector('.cursor').style.color = 'rgba(255, 0, 255, 1)';
+        inf.querySelector('.cursor').classList.add('hidden');
+    } else if (operation.op === '') {
+        sup.querySelector('.cursor').style.gridArea = '1/3/2/4';
+        sup.querySelector('.cursor').style.color = 'rgba(86, 156, 214, 1)';
+        inf.querySelector('.cursor').classList.add('hidden');
+    }
 
 }
 
@@ -254,6 +263,6 @@ document.addEventListener(
     function () {
         Viewport();
         FontSize();
-        ButtonsHover();
+        ButtonEvents();
     }
 );

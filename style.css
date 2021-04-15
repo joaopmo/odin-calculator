@@ -20,22 +20,25 @@ body {
 /*STYLE*/
 :root {
   --delete: rgba(255, 0, 0, 1);
-  --delete-alpha: rgba(255, 0, 0, .2);
-  --number: rgba(0, 0, 255, 1);
-  --number-alpha: rgba(0, 0, 255, .2);
+  --delete-alpha: rgba(255, 0, 0, .3);
+  --number: rgba(86, 156, 214, 1);
+  --number-alpha: rgba(86, 156, 214, .3);
   --operator: rgba(255, 0, 255, 1);
-  --operator-alpha: rgba(255, 0, 255, .2);
-  --equals: rgba(0, 255, 0, 1);
-  --equals-alpha: rgba(0, 255, 0, .2);
+  --operator-alpha: rgba(255, 0, 255, .3);
+  --equals: rgb(109, 214, 86, 1);
+  --equals-alpha: rgb(109, 214, 86, .3);
+  --calculator: #1b1b32;
+  --calculator-shadow: #1b1b3c;
+  --display: #0a0a23;
 }
 
 #content {
-  min-height: 40vw;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: #2a2b40;
 }
 
 .calculator {
@@ -45,17 +48,19 @@ body {
   align-items: center;
   margin: auto;
   padding: 16px;
-  background-color: #262626;
-  border-right: 5px outset #262626;
-  border-bottom: 5px outset #262626;
+  background-color: var(--calculator);
+  border-right: 5px outset var(--calculator);
+  border-bottom: 5px outset var(--calculator);
   border-radius: 5px;
+  box-shadow: 0 0 10px 2px var(--calculator-shadow), 5px 5px 15px 0 var(--calculator-shadow);
   font-family: "Roboto", sans-serif;
 }
 
 .display {
   display: flex;
   flex-direction: column;
-  background-color: #3B5998;
+  background-color: var(--display);
+  box-shadow: inset -2px -2px 5px 0 black;
   font-size: min(calc(var(--vh, 1vh) * 5), calc(var(--vw, 1vw) * 5));
   line-height: min(calc(var(--vh, 1vh) * 5), calc(var(--vw, 1vw) * 5));
   text-align: right;
@@ -63,7 +68,6 @@ body {
   padding: 1px 0 1px 3px;
   height: min(calc(var(--vh, 1vh) * 20), calc(var(--vw, 1vw) * 20));
   width: min(calc(var(--vh, 1vh) * 64), calc(var(--vw, 1vw) * 64));
-  box-shadow: inset -2px -2px 5px 0 rgba(0, 0, 0, 0.5);
 }
 
 .sup {
@@ -72,22 +76,25 @@ body {
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: auto 1fr auto;
-  border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+  border-bottom: 1px dotted var(--calculator-shadow);
 }
 .sup .op {
   grid-area: 1/1/3/2;
+  color: var(--operator);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 .sup .first {
   grid-area: 1/2/2/3;
+  color: var(--number);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 .sup .second {
   grid-area: 2/2/3/3;
+  color: var(--number);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -110,6 +117,7 @@ body {
 }
 .inf .first {
   grid-area: 1/1/2/2;
+  color: var(--equals);
   display: flex;
   flex-direction: column;
   justify-content: center;
