@@ -6,6 +6,7 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,8 +14,16 @@
 <div id="content">
     <div class="calculator">
         <div class="display">
-            <div class="sup"></div>
-            <div class="inf"></div>
+            <div class="sup">
+                <span class="op"></span>
+                <span class="first"></span>
+                <span class="second"></span>
+                <span class="cursor"></span>
+            </div>
+            <div class="inf">
+                <span class="first"></span>
+                <span class="cursor"></span>
+            </div>
         </div>
         <form id="buttons" action="javascript:">
             <input type="button" id="clear-key" class="delete" value="AC" name="key">

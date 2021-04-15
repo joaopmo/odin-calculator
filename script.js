@@ -16,18 +16,18 @@ function FontSize() {
         let viewport = Math.min((window.innerHeight * 0.01), (window.innerWidth * 0.01));
 
         form.forEach(function (item) {
-            let normal = 0;
+            let scale = 0;
             switch (item.defaultValue.length) {
                 case 1:
-                    normal = 1;
+                    scale = 1;
                     break;
                 case 2:
-                    normal = 1.3;
+                    scale = 1.3;
                     break;
                 case 3:
-                    normal = 1.6;
+                    scale = 1.6;
             }
-            item.style.fontSize = `${(9 * viewport) / normal}px`;
+            item.style.fontSize = `${(9 * viewport) / scale}px`;
         });
     };
 
@@ -66,6 +66,7 @@ function InputEventStyle(event, target) {
 function ButtonsHover() {
     let form = document.getElementById('buttons');
     DisplayUpdate();
+    TextCursor();
 
     form.addEventListener('pointerover', function (e) {
         let target = document.elementFromPoint(e.clientX, e.clientY);
@@ -80,9 +81,10 @@ function ButtonsHover() {
     form.addEventListener('pointerdown', function (e) {
         let target = document.elementFromPoint(e.clientX, e.clientY);
         if ((target !== form) && (e.isPrimary)) {
+            operation.up = false;
             InputEventStyle(e, target);
             target.addEventListener('pointerup', function (event) {
-                InputEventStyle(event, this)
+                InputEventStyle(event, this);
             });
 
             Operate(target);
@@ -97,6 +99,7 @@ let operation = {
     second: '',
     current: 'first',
     result: '',
+    up: true,
     calc() {
         switch (this.op) {
             case '+':
@@ -127,19 +130,18 @@ function Operate(key) {
         }
 
         if (key.defaultValue === '.' && !operation[operation.current].includes('.')) {
-            if (operation[operation.current].length >= 2) {
+            if (operation[operation.current].length >= 2 && operation[operation.current].length < 20) {
                 operation[operation.current] += key.defaultValue;
-            } else if (operation[operation.current].length !== 0 && operation[operation.current][0] !== '-') {
+            } else if (operation[operation.current].length === 1 && operation[operation.current][0] !== '-') {
                 operation[operation.current] += key.defaultValue;
             }
-        } else if (key.defaultValue !== '.') {
+        } else if (key.defaultValue !== '.' && operation[operation.current].length < 20) {
             operation[operation.current] += key.defaultValue;
         }
     } else if (key.className === 'operator' && (operation[operation.current].length >= 2 ||
                 operation[operation.current].length !== 0 && operation[operation.current][0] !== '-')) {
         if (operation.result !== '') {
             operation.first = operation.result;
-            operation.op = '';
             operation.second = '';
             operation.current = 'first';
             operation.result = '';
@@ -167,15 +169,31 @@ function Operate(key) {
             operation.result = '';
         }else {
             if (operation.result !== '') {
-                operation.result = operation.result.slice(0, operation.result.length - 1);
+                let isNum = operation.result.slice(0, operation.result.length - 1);
+                if (isFinite(Number(isNum)) && isNum !== '') {
+                    operation.result = isNum;
+                } else {
+                    operation.result = '';
+                    operation.current = 'second';
+                }
             } else {
                 if (operation.second !== '') {
-                    operation.second = operation.second.slice(0, operation.second.length - 1);
+                    let isNum = operation.second.slice(0, operation.second.length - 1);
+                    if (isFinite(Number(isNum))) {
+                        operation.second = isNum;
+                    } else {
+                        operation.second = '';
+                    }
                 }else if (operation.op !== '') {
                     operation.op = '';
                     operation.current = 'first';
                 } else {
-                    operation.first = operation.first.slice(0, operation.first.length - 1);
+                    let isNum = operation.first.slice(0, operation.first.length - 1);
+                    if (isFinite(Number(isNum))) {
+                        operation.first = isNum;
+                    } else {
+                        operation.first = '';
+                    }
                 }
             }
         }
@@ -183,24 +201,51 @@ function Operate(key) {
 }
 
 
+function TextCursor() {
+    let sup = document.querySelector('.sup');
+    let inf = document.querySelector('.inf');
+
+    sup.querySelector('.cursor').innerText = '│';
+
+    let cursor = true;
+    setInterval(() => {
+        if(cursor && operation.up) {
+            sup.querySelector('.cursor').classList.add('hidden');
+            inf.querySelector('.cursor').classList.add('hidden');
+            inf.querySelector('.cursor').innerText = '│';
+            cursor = false;
+        }else {
+            if (operation.result !== ''){
+                sup.querySelector('.cursor').classList.add('hidden');
+                inf.querySelector('.cursor').classList.remove('hidden');
+            } else {
+                sup.querySelector('.cursor').classList.remove('hidden');
+                inf.querySelector('.cursor').classList.add('hidden');
+            }
+            cursor = true;
+            operation.up = true
+        }
+
+
+        if (sup.querySelector('.second').innerHTML !== '') {
+            sup.querySelector('.cursor').style.gridArea = '2/3/3/4';
+        } else if (sup.querySelector('.op').innerHTML === '') {
+            sup.querySelector('.cursor').style.gridArea = '1/3/2/4';
+        }
+
+    }, 500);
+}
+
+
 function DisplayUpdate() {
     let sup = document.querySelector('.sup');
     let inf = document.querySelector('.inf');
 
-    let supText = operation.first;
-    let infText = '';
+    sup.querySelector('.op').innerText = operation.op;
+    sup.querySelector('.first').innerHTML = operation.first;
+    sup.querySelector('.second').innerHTML = operation.second;
+    inf.querySelector('.first').innerText = operation.result;
 
-    supText += (operation.op !== '') ? ` ${operation.op}` : '';
-    supText += (operation.second !== '') ? ` ${operation.second}` : '';
-
-    if (operation.result !== '') {
-        infText = operation.result + '│';
-    } else {
-        supText += '│';
-    }
-
-    sup.innerText = supText;
-    inf.innerText = infText;
 }
 
 
